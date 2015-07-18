@@ -11,7 +11,7 @@ use Attribute::Handlers 0.79;
 use Exporter 5.60 qw( import );
 
 # this will all be re-exported
-use Params::Validate qw(:all);
+use Params::Validate 1.21 qw(:all);
 
 my %tags = (
     types => [
