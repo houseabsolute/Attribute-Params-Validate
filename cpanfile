@@ -1,6 +1,6 @@
 requires "Attribute::Handlers" => "0.79";
 requires "Exporter" => "5.60";
-requires "Params::Validate" => "0";
+requires "Params::Validate" => "1.21";
 requires "attributes" => "0";
 requires "strict" => "0";
 requires "warnings" => "0";
