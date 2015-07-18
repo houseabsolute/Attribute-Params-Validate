@@ -8,13 +8,10 @@ our $VERSION = '1.21';
 use attributes;
 
 use Attribute::Handlers 0.79;
+use Exporter 5.60 qw( import );
 
 # this will all be re-exported
 use Params::Validate qw(:all);
-
-require Exporter;
-
-our @ISA = qw(Exporter);
 
 my %tags = (
     types => [
@@ -28,7 +25,6 @@ our %EXPORT_TAGS = (
 );
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{all} }, 'validation_options' );
 
-
 sub UNIVERSAL::Validate : ATTR(CODE, INIT) {
     _wrap_sub( 'named', @_ );
 }
@@ -37,6 +33,7 @@ sub UNIVERSAL::ValidatePos : ATTR(CODE, INIT) {
     _wrap_sub( 'positional', @_ );
 }
 
+## no critic (Subroutines::ProhibitManyArgs))
 sub _wrap_sub {
     my ( $type, $package, $symbol, $referent, $attr, $params ) = @_;
 
@@ -48,6 +45,7 @@ sub _wrap_sub {
     my $is_method = $attributes{method};
 
     {
+        ## no critic (TestingAndDebugging::ProhibitNoStrict, TestingAndDebugging::ProhibitProlongedStrictureOverride)
         no warnings 'redefine';
         no strict 'refs';
 
@@ -79,12 +77,14 @@ EOF
 }
 EOF
 
+        ## no critic (BuiltinFunctions::ProhibitStringyEval)
         my $sub = eval $code;
         die $@ if $@;
 
         *{$subname} = $sub;
     }
 }
+## use critic
 
 1;
 

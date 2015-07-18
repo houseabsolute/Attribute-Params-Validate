@@ -5,6 +5,7 @@ use File::Spec;
 use lib File::Spec->catdir( 't', 'lib' );
 
 use PVTests;
+use Test::Fatal;
 use Test::More;
 
 use Attribute::Params::Validate;
@@ -36,66 +37,78 @@ sub quux : ValidatePos( { type => SCALAR }, 1 ) {
     return $_[0];
 }
 
-my $res = eval { foo( c => 1 ) };
-is(
-    $@, q{},
-    "Call foo with a scalar"
-);
+{
+    my $res;
+    is(
+        exception { $res = foo( c => 1 ) },
+        undef,
+        'Call foo with a scalar'
+    );
 
-is(
-    $res, 1,
-    'Check return value from foo( c => 1 )'
-);
+    is(
+        $res, 1,
+        'Check return value from foo( c => 1 )'
+    );
 
-eval { foo( c => [] ) };
+    like(
+        exception { foo( c => [] ) },
+        qr/The 'c' parameter .* was an 'arrayref'/,
+        'Check exception thrown from foo( c => [] )'
+    );
+}
 
-like(
-    $@, qr/The 'c' parameter .* was an 'arrayref'/,
-    'Check exception thrown from foo( c => [] )'
-);
+{
+    my $res;
+    is(
+        exception { $res = main->bar( c => 1 ) },
+        undef,
+        'Call bar with a scalar'
+    );
 
-$res = eval { main->bar( c => 1 ) };
-is(
-    $@, q{},
-    'Call bar with a scalar'
-);
+    is(
+        $res, 1,
+        'Check return value from bar( c => 1 )'
+    );
+}
 
-is(
-    $res, 1,
-    'Check return value from bar( c => 1 )'
-);
+{
+    like(
+        exception { baz( foo => [ 1, 2, 3, 4 ] ) },
+        qr/The 'foo' parameter .* did not pass the '5 elements' callback/,
+        'Check exception thrown from baz( foo => [1,2,3,4] )'
+    );
+}
 
-eval { baz( foo => [ 1, 2, 3, 4 ] ) };
+{
+    my $res;
+    is(
+        exception { $res = baz( foo => [ 5, 4, 3, 2, 1 ] ) },
+        undef,
+        'Call baz( foo => [5,4,3,2,1] )'
+    );
 
-like(
-    $@, qr/The 'foo' parameter .* did not pass the '5 elements' callback/,
-    'Check exception thrown from baz( foo => [1,2,3,4] )'
-);
+    is(
+        $res, 5,
+        'Check return value from baz( foo => [5,4,3,2,1] )'
+    );
+}
 
-$res = eval { baz( foo => [ 5, 4, 3, 2, 1 ] ) };
+{
+    like(
+        exception { buz( [], 1 ) },
+        qr/2 parameters were passed to .* but 1 was expected/,
+        'Check exception thrown from quux( [], 1 )'
+    );
+}
 
-is(
-    $@, q{},
-    'Call baz( foo => [5,4,3,2,1] )'
-);
+{
+    my $res;
 
-is(
-    $res, 5,
-    'Check return value from baz( foo => [5,4,3,2,1] )'
-);
-
-eval { buz( [], 1 ) };
-
-like(
-    $@, qr/2 parameters were passed to .* but 1 was expected/,
-    'Check exception thrown from quux( [], 1 )'
-);
-
-$res = eval { quux( 1, [] ) };
-
-is(
-    $@, q{},
-    'Call quux'
-);
+    is(
+        exception { quux( 1, [] ) },
+        undef,
+        'Call quux'
+    );
+}
 
 done_testing();
