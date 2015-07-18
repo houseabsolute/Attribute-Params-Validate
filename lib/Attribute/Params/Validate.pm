@@ -124,6 +124,10 @@ __END__
 
 =head1 DESCRIPTION
 
+B<This module is currently unmaintained. I do not recommend using it. It is a
+failed experiment. If you would like to take over maintenance of this module,
+please contact me at autarch@urth.org.>
+
 The Attribute::Params::Validate module allows you to validate method
 or function call parameters just like Params::Validate does.  However,
 this module allows you to specify your validation spec as an
@@ -168,6 +172,12 @@ what you want.
 
 You B<must> put all the arguments to the C<Validate> or C<ValidatePos>
 attribute on a single line, or Perl will complain.
+
+=head1 SUPPORT
+
+Please submit bugs and patches to the CPAN RT system at
+http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Attribute%3A%3AParams%3A%3AValidate
+or via email at bug-params-validate@rt.cpan.org.
 
 =head1 SEE ALSO
 
